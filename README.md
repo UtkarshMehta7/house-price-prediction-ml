@@ -60,6 +60,10 @@ Complete workflow followed:
 
 Select source/destination city, airline, class, stops, timings and days left — the trained XGBoost model predicts the ticket price instantly in the browser. It also shows a chart of how the fare changes if you book on a different day. (Code is in the `docs/` folder.)
 
+## 📄 Project Report
+
+The complete 45-page project report (dataset, cleaning, EDA, models, results, web demo) is in the `report/` folder — [PDF](report/Flight_Price_Prediction_Report.pdf) | [Word](report/Flight_Price_Prediction_Report.docx).
+
 ## 🔍 Key Insights
 
 - **Class** is the biggest factor – Business class tickets are ~8x costlier than Economy
@@ -90,6 +94,9 @@ jupyter notebook Flight_Price_Prediction.ipynb
 ├── docs/
 │   ├── index.html                  # interactive demo webpage
 │   └── model.json                  # trained XGBoost model exported for the webpage
+├── report/
+│   ├── Flight_Price_Prediction_Report.pdf
+│   └── Flight_Price_Prediction_Report.docx
 ├── requirements.txt
 └── README.md
 ```
@@ -98,6 +105,7 @@ jupyter notebook Flight_Price_Prediction.ipynb
 
 - Hyperparameter tuning using GridSearchCV
 - Try LightGBM and CatBoost
+- Collect data for more cities (currently 6 metro cities / 30 routes) and a longer time period
 - Deploy as a web app using Streamlit where user enters flight details and gets the predicted price
 
 ---
