@@ -1,34 +1,36 @@
-# 🏠 House Price Prediction using Machine Learning
+# ✈️ Flight Price Prediction using Machine Learning
 
-Predictive Analytics project — predicting median house prices of California districts using 5 different regression models and comparing their performance.
+Predictive Analytics project — predicting flight ticket prices in India using 5 different regression models and comparing their performance.
 
 ## 📌 About the Project
 
-The aim of this project is to predict `median_house_value` of a housing block using features like median income, location, number of rooms, population, ocean proximity etc.
+Flight ticket prices keep changing based on airline, route, timing, class and how early we book. The aim of this project is to predict the `price` of a flight ticket using these features.
 
 Complete workflow followed:
-1. **Data Cleaning** – handling missing values, duplicates, capped values and outliers
-2. **Exploratory Data Analysis (EDA)** – distributions, correlation heatmap, geographical plot, boxplots
-3. **Feature Engineering** – rooms per household, bedrooms per room, population per household + one hot encoding
+1. **Data Cleaning** – removing unwanted columns, missing values, duplicates, category check and outlier removal
+2. **Exploratory Data Analysis (EDA)** – class wise, airline wise, days left, stops, timings and route wise analysis
+3. **Feature Engineering** – label/ordinal encoding + one hot encoding
 4. **Model Building** – 5 regression models
 5. **Model Evaluation** – R² Score, MSE, RMSE, MAE + 5-fold Cross Validation
 
 ## 📊 Dataset
 
-- **Name:** California Housing Prices (1990 Census)
-- **Rows:** 20,640 | **Columns:** 10
-- **Source:** Publicly available — [Kaggle](https://www.kaggle.com/datasets/camnugent/california-housing-prices) / StatLib repository
-- After cleaning: 19,277 rows used for modelling
+- **Name:** Flight Price Prediction (EaseMyTrip)
+- **Source:** Kaggle — [shubhambathwal/flight-price-prediction](https://www.kaggle.com/datasets/shubhambathwal/flight-price-prediction)
+- **Rows:** 3,00,153 | **Columns:** 12
+- Data scraped from EaseMyTrip for flights between 6 metro cities — Delhi, Mumbai, Bangalore, Kolkata, Hyderabad, Chennai (Feb–Mar 2022)
 
 | Column | Description |
 |---|---|
-| longitude, latitude | Location of the block |
-| housing_median_age | Median age of houses |
-| total_rooms, total_bedrooms | Total rooms / bedrooms in block |
-| population, households | People and households in block |
-| median_income | Median income (in tens of thousands $) |
-| ocean_proximity | Distance category from ocean |
-| **median_house_value** | **Target variable** |
+| airline | 6 airlines – Vistara, Air India, Indigo, GO FIRST, AirAsia, SpiceJet |
+| flight | Flight code (dropped) |
+| source_city / destination_city | From and to city |
+| departure_time / arrival_time | Time slot (Early Morning, Morning, ... Late Night) |
+| stops | zero / one / two_or_more |
+| class | Economy or Business |
+| duration | Total travel time in hours |
+| days_left | Days between booking and travel date |
+| **price** | **Ticket price in ₹ (Target)** |
 
 ## 🤖 Models Used
 
@@ -40,24 +42,32 @@ Complete workflow followed:
 
 ## 📈 Results
 
-| Rank | Model | R² Score (Accuracy) | MSE | RMSE | MAE |
-|---|---|---|---|---|---|
-| 1 | **XGBoost** | **0.8280 (82.80%)** | 1.75 × 10⁹ | 41,843 | 28,179 |
-| 2 | Random Forest | 0.7906 (79.06%) | 2.13 × 10⁹ | 46,170 | 31,040 |
-| 3 | Decision Tree | 0.6799 (67.99%) | 3.26 × 10⁹ | 57,079 | 38,649 |
-| 4 | Linear Regression | 0.6345 (63.45%) | 3.72 × 10⁹ | 60,992 | 44,656 |
-| 5 | Ridge Regression | 0.6345 (63.45%) | 3.72 × 10⁹ | 60,991 | 44,655 |
+| Rank | Model | R² Score (Accuracy) | MSE | RMSE (₹) | MAE (₹) | 5-Fold CV R² |
+|---|---|---|---|---|---|---|
+| 1 | **XGBoost** | **0.9874 (98.74%)** | 65,38,317 | 2,557 | 1,342 | 0.9795 |
+| 2 | Random Forest | 0.9864 (98.64%) | 70,46,288 | 2,654 | 1,119 | 0.9785 |
+| 3 | Decision Tree | 0.9811 (98.11%) | 97,88,739 | 3,129 | 1,419 | 0.9695 |
+| 4 | Linear Regression | 0.9096 (90.96%) | 4,67,61,203 | 6,838 | 4,536 | 0.9098 |
+| 5 | Ridge Regression | 0.9096 (90.96%) | 4,67,61,199 | 6,838 | 4,536 | 0.9098 |
 
 > Since this is a regression problem, R² score is used as accuracy.
 
-**XGBoost performed the best** with ~83% R² score and lowest error. Cross validation scores were also consistent (XGBoost CV mean R² = 0.8165).
+**XGBoost performed the best** with 98.74% R² score and the lowest MSE/RMSE. On average its prediction is off by only ~₹1,342 (MAE). Cross validation scores are very close to test scores, so the model is stable.
+
+## 🌐 Live Demo
+
+**👉 [Try the interactive fare predictor](https://utkarshmehta7.github.io/house-price-prediction-ml/)**
+
+Select source/destination city, airline, class, stops, timings and days left — the trained XGBoost model predicts the ticket price instantly in the browser. It also shows a chart of how the fare changes if you book on a different day. (Code is in the `docs/` folder.)
 
 ## 🔍 Key Insights
 
-- `median_income` is the most important feature (correlation ≈ 0.65 with price)
-- Houses near the coast / Bay Area are much costlier, INLAND houses are cheapest
-- Linear models are not enough because relation between features and price is non-linear
-- Ensemble models (Random Forest, XGBoost) give much better results
+- **Class** is the biggest factor – Business class tickets are ~8x costlier than Economy
+- Tickets booked in the **last 1-2 weeks** are much costlier, prices are lowest 15+ days before travel
+- **Non-stop** and **late night** flights are generally cheaper
+- **Vistara and Air India** are the costliest airlines, **AirAsia and Indigo** the cheapest
+- Linear models are not enough because the relation between days left / duration and price is non-linear
+- Tree based ensemble models (Random Forest, XGBoost) give the best results
 
 ## 🛠️ Tech Stack
 
@@ -69,14 +79,17 @@ Python, Pandas, NumPy, Matplotlib, Seaborn, Scikit-learn, XGBoost, Jupyter Noteb
 git clone https://github.com/UtkarshMehta7/house-price-prediction-ml.git
 cd house-price-prediction-ml
 pip install -r requirements.txt
-jupyter notebook House_Price_Prediction.ipynb
+jupyter notebook Flight_Price_Prediction.ipynb
 ```
 
 ## 📁 Project Structure
 
 ```
-├── House_Price_Prediction.ipynb   # main notebook (cleaning, EDA, models)
-├── housing.csv                    # dataset
+├── Flight_Price_Prediction.ipynb   # main notebook (cleaning, EDA, models)
+├── Clean_Dataset.csv               # dataset (from Kaggle)
+├── docs/
+│   ├── index.html                  # interactive demo webpage
+│   └── model.json                  # trained XGBoost model exported for the webpage
 ├── requirements.txt
 └── README.md
 ```
@@ -85,7 +98,7 @@ jupyter notebook House_Price_Prediction.ipynb
 
 - Hyperparameter tuning using GridSearchCV
 - Try LightGBM and CatBoost
-- Deploy as a web app using Streamlit
+- Deploy as a web app using Streamlit where user enters flight details and gets the predicted price
 
 ---
 Made by **Utkarsh Mehta** ✨
