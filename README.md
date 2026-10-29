@@ -109,4 +109,4 @@ jupyter notebook Flight_Price_Prediction.ipynb
 - Deploy as a web app using Streamlit where user enters flight details and gets the predicted price
 
 ---
-Made by **Utkarsh Mehta** ✨
+Made by **Asmi Pandey** ✨
